@@ -27,6 +27,11 @@ const addItem = e => {
         editItem.classList.remove('edit-mode');
         editItem.remove();
         isEditMode = false;
+    } else {
+        if (checkDuplicate(inputValue)){
+            alert('The value you entered already exists.');
+            return;
+        }
     }
 
     addItemToDom(inputValue);
@@ -99,9 +104,13 @@ const removeItem = item => {
 const removeFromLocal = item => {
     let localStorageValue = itemsFromLocal();
     localStorageValue = localStorageValue.filter(it => it !== item);
-    
     // Reset local storage variable.
     localStorage.setItem('items', JSON.stringify(localStorageValue));
+}
+
+const checkDuplicate = item => {
+    const localStorageValue = itemsFromLocal();
+    return localStorageValue.includes(item);
 }
 
 
