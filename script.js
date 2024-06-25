@@ -26,7 +26,24 @@ const addItem = e => {
     button.appendChild(icon);
     li.appendChild(button);
     itemList.appendChild(li);
+
     resetUI();
+
+    addToLocal(inputValue);
+}
+
+const addToLocal = item => {
+    let localStorageValue;
+    if (localStorage.getItem('items') === null){
+        localStorageValue = [];
+    } else {
+        localStorageValue = JSON.parse(localStorage.getItem('items'));
+    }
+    // Adding item to the array
+    localStorageValue.push(item);
+
+    // Convert Array to JSON string to store it in localStorage
+    localStorage.setItem('items', JSON.stringify(localStorageValue));
 }
 
 const removeItem = e => {
