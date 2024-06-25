@@ -26,6 +26,7 @@ const addItem = e => {
     button.appendChild(icon);
     li.appendChild(button);
     itemList.appendChild(li);
+    resetUI();
 }
 
 const removeItem = e => {
@@ -33,14 +34,10 @@ const removeItem = e => {
         if(confirm('Are you sure you want to delete?')){
             e.target.parentElement.parentElement.remove();
         }
+        resetUI();
     }
 }
 
-const clearItems = () => {
-    while(itemList.firstChild){
-        itemList.removeChild(itemList.firstChild);
-    }
-}
 
 const filterItems = (e) => {
     const text = e.target.value.toLowerCase();
@@ -55,8 +52,28 @@ const filterItems = (e) => {
     });
 }
 
+const clearItems = () => {
+    while(itemList.firstChild){
+        itemList.removeChild(itemList.firstChild);
+    }
+    resetUI();
+}
+
+const resetUI = () => {
+    const items = itemList.querySelectorAll('li');
+    if (items.length === 0){
+        clearBtn.style.display = 'none';
+        itemFilter.style.display = 'none';
+    } else {
+        clearBtn.style.display = 'block';
+        itemFilter.style.display = 'block';
+    }
+}
+
 
 itemForm.addEventListener('submit', addItem);
 itemList.addEventListener('click', removeItem);
 clearBtn.addEventListener('click', clearItems);
 itemFilter.addEventListener('input', filterItems);
+
+resetUI();
