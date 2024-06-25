@@ -1,6 +1,7 @@
 const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
+const itemFilter = document.getElementById('filter');
 const clearBtn = document.getElementById('clear');
 
 
@@ -41,7 +42,21 @@ const clearItems = () => {
     }
 }
 
+const filterItems = (e) => {
+    const text = e.target.value.toLowerCase();
+    const items = itemList.querySelectorAll('li');
+    items.forEach(item => {
+        const itemContent = item.firstChild.textContent.toLowerCase();
+        if (itemContent.indexOf(text) != -1){
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
 
 itemForm.addEventListener('submit', addItem);
 itemList.addEventListener('click', removeItem);
 clearBtn.addEventListener('click', clearItems);
+itemFilter.addEventListener('input', filterItems);
