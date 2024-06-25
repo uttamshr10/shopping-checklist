@@ -4,6 +4,11 @@ const itemList = document.getElementById('item-list');
 const itemFilter = document.getElementById('filter');
 const clearBtn = document.getElementById('clear');
 
+const showItems = () => {
+    const storageItems = itemsFromLocal();
+    storageItems.forEach(item => addItemToDom(item));
+    resetUI();
+}
 
 // Adding Event Listener
 const addItem = e => {
@@ -13,37 +18,46 @@ const addItem = e => {
         alert('Please enter item.');
         return;
     }
-
-    const li = document.createElement('li');
-    li.appendChild(document.createTextNode(inputValue));
-    
-    const button = document.createElement('button');
-    button.classList = 'remove-item btn-link text-red';
-
-    const icon = document.createElement('icon');
-    icon.classList = 'fa-solid fa-xmark';
-
-    button.appendChild(icon);
-    li.appendChild(button);
-    itemList.appendChild(li);
+    addItemToDom(inputValue);
 
     resetUI();
 
     addToLocal(inputValue);
 }
 
+const addItemToDom = item => {
+    const li = document.createElement('li');
+    li.appendChild(document.createTextNode(item));
+    
+    const button = document.createElement('button');
+    button.classList = 'remove-item btn-link text-red';
+    const icon = document.createElement('icon');
+    icon.classList = 'fa-solid fa-xmark';
+
+    button.appendChild(icon);
+    li.appendChild(button);
+    itemList.appendChild(li);
+}
+
+
 const addToLocal = item => {
+    const localStorageValue = itemsFromLocal();
+    
+    // Adding item to the array
+    localStorageValue.push(item);
+
+    // Convert Array to JSON string to store it in localStorage
+    localStorage.setItem('items', JSON.stringify(localStorageValue));
+}
+
+const itemsFromLocal = () => {
     let localStorageValue;
     if (localStorage.getItem('items') === null){
         localStorageValue = [];
     } else {
         localStorageValue = JSON.parse(localStorage.getItem('items'));
     }
-    // Adding item to the array
-    localStorageValue.push(item);
-
-    // Convert Array to JSON string to store it in localStorage
-    localStorage.setItem('items', JSON.stringify(localStorageValue));
+    return localStorageValue;
 }
 
 const removeItem = e => {
@@ -87,10 +101,13 @@ const resetUI = () => {
     }
 }
 
+const run = () => {
+    itemForm.addEventListener('submit', addItem);
+    itemList.addEventListener('click', removeItem);
+    clearBtn.addEventListener('click', clearItems);
+    itemFilter.addEventListener('input', filterItems);
+    document.addEventListener('DOMContentLoaded', showItems);
+    resetUI();
+}
 
-itemForm.addEventListener('submit', addItem);
-itemList.addEventListener('click', removeItem);
-clearBtn.addEventListener('click', clearItems);
-itemFilter.addEventListener('input', filterItems);
-
-resetUI();
+run();
