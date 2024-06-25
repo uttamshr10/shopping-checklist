@@ -60,13 +60,26 @@ const itemsFromLocal = () => {
     return localStorageValue;
 }
 
-const removeItem = e => {
+const onClickItem = e => {
     if (e.target.parentElement.classList.contains('remove-item')){
-        if(confirm('Are you sure you want to delete?')){
-            e.target.parentElement.parentElement.remove();
-        }
+        removeItem(e.target.parentElement.parentElement);
+    }
+}
+
+const removeItem = item => {
+    if(confirm('Are you sure you want to delete?')){
+        item.remove();
+        removeFromLocal(item.textContent);
         resetUI();
     }
+}
+
+const removeFromLocal = item => {
+    let localStorageValue = itemsFromLocal();
+    localStorageValue = localStorageValue.filter(it => it !== item);
+    
+    // Reset local storage variable.
+    localStorage.setItem('items', JSON.stringify(localStorageValue));
 }
 
 
@@ -87,6 +100,7 @@ const clearItems = () => {
     while(itemList.firstChild){
         itemList.removeChild(itemList.firstChild);
     }
+    localStorage.removeItem('items');
     resetUI();
 }
 
@@ -103,7 +117,7 @@ const resetUI = () => {
 
 const run = () => {
     itemForm.addEventListener('submit', addItem);
-    itemList.addEventListener('click', removeItem);
+    itemList.addEventListener('click', onClickItem);
     clearBtn.addEventListener('click', clearItems);
     itemFilter.addEventListener('input', filterItems);
     document.addEventListener('DOMContentLoaded', showItems);
