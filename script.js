@@ -26,4 +26,14 @@ const addItem = e => {
     itemList.appendChild(li);
 }
 
+const removeItem = e => {
+    if (e.target.parentElement.classList.contains('remove-item')){
+        if(confirm('Are you sure you want to delete?')){
+            e.target.parentElement.parentElement.remove();
+        }
+    }
+}
+
+
 itemForm.addEventListener('submit', addItem);
+itemList.addEventListener('click', removeItem);
