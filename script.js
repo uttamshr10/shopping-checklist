@@ -20,6 +20,15 @@ const addItem = e => {
         alert('Please enter item.');
         return;
     }
+
+    if(isEditMode){
+        const editItem = itemList.querySelector('.edit-mode');
+        removeFromLocal(editItem.textContent);
+        editItem.classList.remove('edit-mode');
+        editItem.remove();
+        isEditMode = false;
+    }
+
     addItemToDom(inputValue);
 
     resetUI();
@@ -118,6 +127,7 @@ const clearItems = () => {
 }
 
 const resetUI = () => {
+    itemInput.value = '';
     const items = itemList.querySelectorAll('li');
     if (items.length === 0){
         clearBtn.style.display = 'none';
@@ -126,6 +136,9 @@ const resetUI = () => {
         clearBtn.style.display = 'block';
         itemFilter.style.display = 'block';
     }
+    formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item';
+    formBtn.style.backgroundColor = '#333';
+    isEditMode = false;
 }
 
 const run = () => {
